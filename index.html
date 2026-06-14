@@ -1,213 +1,985 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Sela — Di sela hari mu.</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sela — Di Sela Harimu</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           BRAND STYLING & VARIABLE SYSTEM
+           ========================================================================== */
+        :root {
+            --sela-blue: #032a42;
+            --sela-white: #ffffff;
+            --sela-cream: #f0f0dc;
+            --sela-brown: #9c7e68;
+            --sela-black: #111111;
+            
+            --font-logo: 'Fredoka', sans-serif;
+            --font-body: 'Poppins', sans-serif;
+        }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- 
-<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
--->
+        /* Reset & Base System */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
-:root{
---navy:#012E4D;
---ivory:#F4F1E6;
---white:#FFFFFF;
---sand:#DCD7C7;
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--sela-cream);
+            color: var(--sela-blue);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Custom Crosshair Cursor (Baunfire Inspired) */
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Matikan custom cursor di mobile device untuk kenyamanan user UX */
+        /* Custom Crosshair Cursor dengan Auto-Blending Kontras */
+@media (pointer: fine) {
+    * {
+        cursor: none !important;
+    }
+    #custom-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        /* Menggunakan border putih dikombinasikan dengan blend-mode difference */
+        border: 1px solid #ffffff; 
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000; /* Pastikan berada di paling atas objek apa pun */
+        transform: translate(-50%, -50%);
+        
+        /* KUNCI UTAMA: Kursor otomatis kontras dengan warna di bawahnya */
+        mix-blend-mode: difference; 
+        
+        transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                    height 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #custom-cursor::before, #custom-cursor::after {
+        content: '';
+        position: absolute;
+        /* Menggunakan warna putih agar saat invert/difference menjadi sangat kontras */
+        background-color: #ffffff; 
+    }
+    /* Garis horizontal crosshair */
+    #custom-cursor::before {
+        width: 6px;
+        height: 1px;
+    }
+    /* Garis vertikal crosshair */
+    #custom-cursor::after {
+        width: 1px;
+        height: 6px;
+    }
+    
+    /* Efek Hover State (Saat membesar melewati tombol/link) */
+    body.cursor-expand #custom-cursor {
+        width: 50px;
+        height: 50px;
+        /* Memberikan sedikit background inversi yang elegan */
+        background-color: rgba(255, 255, 255, 0.15); 
+        border-color: #ffffff;
+    }
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-font-family:Inter,sans-serif;
-background:var(--ivory);
-color:var(--navy);
-}
-header{
-position:fixed;top:20px;left:50%;transform:translateX(-50%);
-width:min(1200px,92%);
-background:rgba(255,255,255,.75);
-backdrop-filter:blur(18px);
-padding:14px 24px;border-radius:24px;
-display:flex;justify-content:space-between;align-items:center;
-z-index:999;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-}
-.logo img{height:52px}
-nav ul{display:flex;gap:28px;list-style:none}
-nav a{text-decoration:none;color:var(--navy);font-weight:600}
-.hero{
-height:100vh;position:relative;overflow:hidden;
-}
-.hero-content{
-position:absolute;z-index:10;
-left:8%;top:50%;transform:translateY(-50%);
-max-width:520px;
-}
-.hero h1{
-font-family:Fraunces,serif;
-font-size:clamp(3rem,7vw,6rem);
-line-height:.95;
-margin-bottom:20px;
-}
-.hero p{
-font-size:1.1rem;line-height:1.8;margin-bottom:32px;
-}
-.btn{
-display:inline-block;
-padding:14px 24px;
-border-radius:999px;
-background:var(--navy);
-color:white;
-text-decoration:none;
-}
-spline-viewer{
-position:absolute;
-inset:0;
-width:100%;
-height:100%;
-}
-section{
-padding:120px 8%;
-}
-.story p{
-max-width:700px;
-font-size:1.2rem;
-line-height:2;
-}
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:24px;
-margin-top:40px;
-}
-.card{
-background:white;
-padding:32px;
-border-radius:28px;
-box-shadow:0 10px 30px rgba(0,0,0,.06);
-transition:.3s;
-}
-.card:hover{
-transform:translateY(-8px);
-}
-footer{
-background:var(--navy);
-color:white;
-padding:80px 8%;
-text-align:center;
-}
-@media(max-width:768px){
-nav{display:none}
-.hero-content{
-left:8%;right:8%;
-max-width:none;
-}
-.logo img{height:42px}
-}
-</style>
+
+        /* Layout Container */
+        .section-padding {
+            padding: 120px 8%;
+        }
+        @media (max-width: 768px) {
+            .section-padding {
+                padding: 80px 6%;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, .logo-text {
+            font-family: var(--font-logo);
+            font-weight: 600;
+        }
+
+        p {
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* ==========================================================================
+           STICKY NAVIGATION BAR
+           ========================================================================== */
+        header.sticky-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(240, 240, 220, 0.8); /* Semi-transparan Sela Cream */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(3, 42, 66, 0.05);
+            transition: padding 0.3s ease;
+        }
+
+        /* Placeholder Logo Struktural - Bisa teks atau ganti ke gambar asset .png Anda nanti */
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .logo-text {
+            font-size: 28px;
+            color: var(--sela-blue);
+            letter-spacing: -0.5px;
+        }
+        .logo-img {
+            display: none; /* Ubah ke block jika ingin memakai file Sela 5k PX.png */
+            height: 40px; 
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav.nav-links a {
+            text-decoration: none;
+            color: var(--sela-blue);
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 35px;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        nav.nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--sela-brown);
+            transition: width 0.3s ease;
+        }
+        nav.nav-links a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            nav.nav-links {
+                display: none; /* Bersih di mobile view */
+            }
+        }
+
+        /* ==========================================================================
+           HERO SECTION (With Video Background Capability)
+           ========================================================================== */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+            overflow: hidden;
+            background-color: var(--sela-blue); /* Fallback color */
+        }
+
+        /* Background Video & Fallback Mask */
+        .video-bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .video-bg-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Overlay gradasi gelap premium agar tulisan di atas video tetap terbaca sempurna */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(75deg, rgba(3, 42, 66, 0.85) 30%, rgba(3, 42, 66, 0.4) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 750px;
+            color: var(--sela-cream);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: faderInReveal 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation-delay: 0.2s;
+        }
+
+        .hero-tagline {
+            font-family: var(--font-logo);
+            font-size: 18px;
+            color: var(--sela-brown);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            line-height: 1.15;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            opacity: 0.85;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .hero-btn-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons Styling */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 36px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            letter-spacing: 0.5px;
+        }
+        .btn-primary {
+            background-color: var(--sela-cream);
+            color: var(--sela-blue);
+            border: 1px solid var(--sela-cream);
+        }
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--sela-cream);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--sela-cream);
+            border: 1px solid rgba(240, 240, 220, 0.4);
+        }
+        .btn-secondary:hover {
+            border-color: var(--sela-cream);
+            background-color: rgba(240, 240, 220, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .hero-note {
+            font-size: 12px;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 38px; }
+            .hero-desc { font-size: 15px; }
+            .btn { width: 100%; padding: 14px 28px; }
+        }
+
+        /* ==========================================================================
+           FILOSOSFI BRAND SECTION
+           ========================================================================== */
+        .filosofi-section {
+            background-color: var(--sela-white);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        
+        .filosofi-header h2 {
+            font-size: 42px;
+            color: var(--sela-blue);
+            line-height: 1.2;
+        }
+        .filosofi-header .divider {
+            width: 60px;
+            height: 3px;
+            background-color: var(--sela-brown);
+            margin-top: 20px;
+        }
+
+        .filosofi-body p {
+            font-size: 17px;
+            color: var(--sela-black);
+            margin-bottom: 25px;
+            opacity: 0.85;
+        }
+        .filosofi-body p:last-child {
+            margin-bottom: 0;
+            font-weight: 400;
+            color: var(--sela-blue);
+        }
+
+        @media (max-width: 900px) {
+            .filosofi-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .filosofi-header h2 { font-size: 32px; }
+        }
+
+        /* ==========================================================================
+           VISI & MISI SECTION
+           ========================================================================== */
+        .visimisi-section {
+            background-color: var(--sela-blue);
+            color: var(--sela-cream);
+        }
+
+        .visi-block {
+            text-align: center;
+            max-width: 850px;
+            margin: 0 auto 90px;
+        }
+        .visi-block span {
+            font-family: var(--font-logo);
+            text-transform: uppercase;
+            font-size: 14px;
+            color: var(--sela-brown);
+            letter-spacing: 2px;
+        }
+        .visi-block h3 {
+            font-size: 32px;
+            font-weight: 400;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+
+        .misi-block {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .misi-title-text {
+            font-family: var(--font-logo);
+            text-transform: uppercase;
+            font-size: 14px;
+            color: var(--sela-brown);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .misi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .misi-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(240, 240, 220, 0.08);
+            padding: 35px 30px;
+            border-radius: 16px;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+        .misi-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(240, 240, 220, 0.2);
+        }
+        .misi-num {
+            font-family: var(--font-logo);
+            font-size: 20px;
+            color: var(--sela-brown);
+            margin-bottom: 15px;
+            display: block;
+        }
+        .misi-card p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* ==========================================================================
+           MENU SELECTION (Auto Transition Component)
+           ========================================================================== */
+        .menu-section {
+            background-color: var(--sela-cream);
+        }
+
+        .menu-intro {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 60px;
+        }
+        .menu-intro span {
+            font-family: var(--font-logo);
+            color: var(--sela-brown);
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+        }
+        .menu-intro h2 {
+            font-size: 36px;
+            margin: 10px 0 15px;
+        }
+        .menu-intro p {
+            font-size: 15px;
+            opacity: 0.75;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .product-card {
+            background-color: var(--sela-white);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(3, 42, 66, 0.02);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+        }
+
+        /* Image Display dengan Mekanisme Auto Fade Transition 2 Gambar */
+        .product-image-frame {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            border-radius: 14px;
+            overflow: hidden;
+            background-color: #f7f7f0;
+            margin-bottom: 20px;
+        }
+
+        .product-image-frame img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Kontrol Opacity State untuk Gambar Transisi Otomatis */
+        .product-image-frame img.img-secondary {
+            opacity: 0;
+        }
+        .product-image-frame:hover img.img-secondary {
+            opacity: 1;
+        }
+
+        .product-details h3 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: var(--sela-blue);
+        }
+        .product-details p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .all-menu-trigger {
+            text-align: center;
+        }
+        .btn-menu-link {
+            font-family: var(--font-logo);
+            color: var(--sela-blue);
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 2px solid var(--sela-blue);
+            padding-bottom: 4px;
+            transition: all 0.3s ease;
+        }
+        .btn-menu-link:hover {
+            color: var(--sela-brown);
+            border-color: var(--sela-brown);
+        }
+
+        @media (max-width: 960px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        }
+        @media (max-width: 650px) {
+            .products-grid { grid-template-columns: 1fr; }
+            .product-image-frame { height: 280px; }
+        }
+
+        /* ==========================================================================
+           RUANG SELA (Feedback Section)
+           ========================================================================== */
+        .ruang-sela-section {
+            background-color: var(--sela-black);
+            color: var(--sela-white);
+            text-align: center;
+        }
+
+        .ruang-sela-wrapper {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .ruang-sela-wrapper span {
+            font-family: var(--font-logo);
+            color: var(--sela-brown);
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+        .ruang-sela-wrapper h2 {
+            font-size: 38px;
+            margin: 15px 0 25px;
+            color: var(--sela-cream);
+            font-weight: 500;
+        }
+        .ruang-sela-wrapper p {
+            font-size: 15px;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+        .ruang-sela-wrapper .note-text {
+            font-size: 13px;
+            opacity: 0.5;
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        .btn-feedback {
+            background-color: var(--sela-cream);
+            color: var(--sela-black);
+            border: 1px solid var(--sela-cream);
+        }
+        .btn-feedback:hover {
+            background-color: transparent;
+            color: var(--sela-cream);
+            transform: scale(1.03);
+        }
+
+        /* ==========================================================================
+           FOOTER STYLING
+           ========================================================================== */
+        footer.main-footer {
+            background-color: var(--sela-cream);
+            border-top: 1px solid rgba(3, 42, 66, 0.08);
+            padding: 80px 8% 40px;
+            color: var(--sela-blue);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand h3 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .footer-brand p {
+            font-size: 15px;
+            opacity: 0.8;
+            max-width: 350px;
+        }
+
+        .footer-info-title {
+            font-family: var(--font-logo);
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--sela-brown);
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+        .footer-links li {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .footer-links a {
+            text-decoration: none;
+            color: var(--sela-blue);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--sela-brown);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(3, 42, 66, 0.05);
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+            .footer-bottom { flex-direction: column; gap: 15px; text-align: center; }
+        }
+
+        /* ==========================================================================
+           STICKY FLOATING WHATSAPP BUTTON
+           ========================================================================== */
+        .whatsapp-sticky-trigger {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            width: 56px;
+            height: 56px;
+            background-color: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
+            z-index: 999;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .whatsapp-sticky-trigger:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .whatsapp-sticky-trigger svg {
+            width: 28px;
+            height: 28px;
+            fill: #ffffff;
+        }
+
+        /* Global Entrance Keyframes Trigger */
+        @keyframes faderInReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Element Reveal on Scroll Component Base Styles */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal-element.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-<div class="logo">
-<img src="Sela 5k PX.png" alt="Sela Logo">
-</div>
+    <!-- Custom Crosshair Cursor Element -->
+    <div id="custom-cursor"></div>
 
-<nav>
-<ul>
-<li><a href="#story">Story</a></li>
-<li><a href="#signature">Signature</a></li>
-<li><a href="#continue">Continue</a></li>
-</ul>
-</nav>
-</header>
+    <!-- 1. Header / Sticky Navigation Bar -->
+    <header class="sticky-nav">
+        <!-- 
+           Catatan Struktural Penggantian Logo:
+           - Default saat ini berbasis teks wordmark font Fredoka.
+           - Untuk mengganti dengan "Sela 5k PX.png":
+             1. Masukkan file gambar Anda ke direktori web.
+             2. Ganti tag span di bawah dengan: <img src="Sela 5k PX.png" alt="Sela Logo" class="logo-img" style="display:block;">
+             3. Atur style .logo-text { display: none; }
+        -->
+        <a href="#" class="logo-container interactive-target">
+            <span class="logo-text">Sela</span>
+        </a>
+        <nav class="nav-links">
+            <a href="#filosofi" class="interactive-target">Filosofi</a>
+            <a href="#visi-misi" class="interactive-target">Visi & Misi</a>
+            <a href="#menu" class="interactive-target">Menu Pilihan</a>
+            <a href="#ruang-sela" class="interactive-target">Ruang Sela</a>
+        </nav>
+    </header>
 
-<section class="hero">
-<div class="hero-content">
-<h1>Di sela hari mu.</h1>
-<p>
-Coffee and non-coffee companions for the stories you're already living.
-Sela isn't the destination. Sela simply moves with you.
-</p>
+    <!-- 1. Hero Section -->
+    <section class="hero-section">
+        <div class="video-bg-container">
+            <!-- 
+               Catatan Integrasi Video Background:
+               - Ganti atribut src pada tag source di bawah dengan file video Anda (cth: video-hero-sela.mp4).
+               - Pastikan menggunakan properti autoplay, loop, muted, dan playsinline agar berjalan otomatis secara smooth di desktop maupun mobile browser.
+            -->
+            <video autoplay loop muted playsinline poster="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%25' height='100%25' fill='%23032a42'/></svg>">
+                <source src="https://media.istockphoto.com/id/469833895/id/video/biji-kopi-jatuh-di-atas-latar-belakang.mp4?s=mp4-640x640-is&k=20&c=hjoD4xJGDQWDN27mLM1rLL3kZvFrKZ3uBG7KXZY6hAw=" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        
+        <div class="hero-content">
+            <span class="hero-tagline">Sela Di Sela Harimu</span>
+            <h1 class="hero-title">Tempat untuk menikmati momen sejenak, mengisi ulang energi, dan kembali melangkah.</h1>
+            <p class="hero-desc">Dari kopi hingga minuman favoritmu, Sela hadir menemani setiap jeda yang berarti.</p>
+            <div class="hero-btn-group">
+                <a href="https://drive.google.com/drive/folders/1gCcxzqQPckgm6vo1fFMuqYb4MAxXJyXY?usp=sharing" target="_blank" class="btn btn-primary interactive-target">Lihat Menu</a>
+                <a href="https://wa.me/6285887770921" target="_blank" class="btn btn-secondary interactive-target">Pre-Order Sekarang</a>
+            </div>
+            <span class="hero-note">Pre-order tersedia untuk area tertentu. Dibuat segar setiap harinya.</span>
+        </div>
+    </section>
 
-<a href="#story" class="btn">Begin the Journey</a>
-</div>
+    <!-- 2. Filosofi Brand Section -->
+    <section id="filosofi" class="section-padding filosofi-section reveal-element">
+        <div class="filosofi-header">
+            <h2>Filosofi Brand</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="filosofi-body">
+            <p>Kami percaya bahwa hidup tidak hanya terdiri dari tujuan-tujuan besar, tetapi juga momen-momen kecil yang mengisinya.</p>
+            <p>Di sela pekerjaan, perjalanan, percakapan, dan rutinitas sehari-hari, ada cerita yang tercipta, tawa yang dibagikan, dan rasa yang dinikmati bersama.</p>
+            <p>Sela hadir bukan untuk menghentikan langkahmu. Sela hadir untuk menemani langkah-langkah yang sedang berjalan.</p>
+        </div>
+    </section>
 
-<spline-viewer url="https://prod.spline.design/ibwUepX665LxB3Ri/scene.splinecode"></spline-viewer>
-</section>
+    <!-- 3. Visi & Misi Section -->
+    <section id="visi-misi" class="section-padding visimisi-section reveal-element">
+        <div class="visi-block">
+            <span>Visi</span>
+            <h3>"Menghadirkan momen sederhana yang bermakna di sela-sela aktivitas sehari-hari."</h3>
+        </div>
+        
+        <div class="misi-block">
+            <h3 class="misi-title-text">Misi</h3>
+            <div class="misi-grid">
+                <div class="misi-card">
+                    <span class="misi-num">01</span>
+                    <p>Menyajikan kopi dan minuman berkualitas dengan rasa yang konsisten.</p>
+                </div>
+                <div class="misi-card">
+                    <span class="misi-num">02</span>
+                    <p>Menghadirkan pelayanan yang hangat, responsif, dan dapat dipercaya.</p>
+                </div>
+                <div class="misi-card">
+                    <span class="misi-num">03</span>
+                    <p>Menjadikan setiap pesanan sebagai bagian dari momen kecil yang berarti.</p>
+                </div>
+                <div class="misi-card">
+                    <span class="misi-num">04</span>
+                    <p>Bertumbuh secara berkelanjutan melalui inovasi dan kedekatan dengan pelanggan.</p>
+                </div>
+                <div class="misi-card">
+                    <span class="misi-num">05</span>
+                    <p>Memberikan manfaat bagi pelanggan, mitra, dan lingkungan sekitar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section class="story" id="story">
-<h2>Present in the moments in between.</h2>
-<br>
-<p>
-Ada hari yang dimulai dengan daftar tugas.
-Ada yang dipenuhi percakapan.
-Ada yang terasa begitu cepat.
-Ada pula yang ingin dikenang lebih lama.
-Apa pun yang mengisi harimu,
-ada Sela di antaranya.
-</p>
-</section>
+    <!-- 4. Menu Pilihan Sela Section -->
+    <section id="menu" class="section-padding menu-section reveal-element">
+        <div class="menu-intro">
+            <span>Menu Pilihan Sela</span>
+            <h2>Sebagian Momen Favorit di Sela</h2>
+            <p>Dibuat dengan perhatian pada rasa, kualitas, dan pengalaman dalam setiap tegukan. Arahkan kursor / tap untuk melihat momen pembuatan.</p>
+        </div>
 
-<section id="signature">
-<h2>Signature Collection</h2>
+        <div class="products-grid">
+            <!-- Produk 1 -->
+            <div class="product-card">
+                <div class="product-image-frame">
+                    <!-- Setup 2 Gambar untuk Transisi Otomatis (Image Transition) -->
+                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop" alt="Americano Sela" class="img-primary">
+                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=600&auto=format&fit=crop" alt="Americano Sela Alternate" class="img-secondary">
+                </div>
+                <div class="product-details">
+                    <h3>Americano</h3>
+                    <p>Bold, clean, and timeless.</p>
+                </div>
+            </div>
 
-<div class="cards">
-<div class="card">
-<h3>Sela Signature</h3>
-<p>Signature espresso layered with thick, rich cream and smooth melted caramel.</p>
-</div>
+            <!-- Produk 2 -->
+            <div class="product-card">
+                <div class="product-image-frame">
+                    <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fc9f?q=80&w=600&auto=format&fit=crop" alt="Latte Sela" class="img-primary">
+                    <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=600&auto=format&fit=crop" alt="Latte Sela Alternate" class="img-secondary">
+                </div>
+                <div class="product-details">
+                    <h3>Sela Latte</h3>
+                    <p>Lembut, seimbang, dan nyaman dinikmati kapan saja.</p>
+                </div>
+            </div>
 
-<div class="card">
-<h3>Seka Latte</h3>
-<p>Perfectly balanced espresso and premium milk with a toasted hazelnut finish.</p>
-</div>
+            <!-- Produk 3 -->
+            <div class="product-card">
+                <div class="product-image-frame">
+                    <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=600&auto=format&fit=crop" alt="Signature Coffee Sela" class="img-primary">
+                    <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=600&auto=format&fit=crop" alt="Signature Coffee Sela Alternate" class="img-secondary">
+                </div>
+                <div class="product-details">
+                    <h3>Sela Signature</h3>
+                    <p>Pilihan menyegarkan untuk menemani harimu.</p>
+                </div>
+            </div>
+        </div>
 
-<div class="card">
-<h3>Vanilla Milk Cloud</h3>
-<p>Not a regular vanilla milk but its a cloud milk</p>
-</div>
+        <div class="all-menu-trigger">
+            <a href="https://drive.google.com/drive/folders/1gCcxzqQPckgm6vo1fFMuqYb4MAxXJyXY?usp=sharing" target="_blank" class="btn-menu-link interactive-target">Lihat Seluruh Menu Di Google Drive &rarr;</a>
+        </div>
+    </section>
 
-<div class="card">
-<h3>Salted Caramel Milk</h3>
-<p>Salted Caramel but buttery and with milk. Yum.</p>
-</div>
-</div>
-</section>
+    <!-- 6. Ruang Sela (Feedback Section) -->
+    <section id="ruang-sela" class="section-padding ruang-sela-section reveal-element">
+        <div class="ruang-sela-wrapper">
+            <span>Feedback for Sela</span>
+            <h2>Cerita, saran, atau masukanmu membantu kami bertumbuh.</h2>
+            <p>Sela lahir dari momen-momen kecil di sela kesibukan. Setiap pengalaman yang kamu bagikan membantu kami memahami apa yang sudah baik dan apa yang masih bisa kami tingkatkan. Tak perlu kata-kata yang sempurna. Cerita sederhana, ide baru, atau masukan yang jujur akan selalu berarti bagi kami.</p>
+            <p class="note-text">Terima kasih telah meluangkan sedikit sela dari harimu untuk bertumbuh bersama Sela.</p>
+            <a href="https://forms.gle/whussBrGvJBpQRiW6" target="_blank" class="btn btn-primary btn-feedback interactive-target">Bagikan Ceritamu</a>
+        </div>
+    </section>
 
-<section id="continue">
-<h2>Continue with Sela</h2>
+    <!-- 7. Footer Section -->
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Sela</h3>
+                <p>Terima kasih telah menghadirkan Sela dalam cerita yang sedang berjalan.</p>
+            </div>
+            <div>
+                <h4 class="footer-info-title">Pre-Order Area</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="interactive-target">📍 Tersedia melalui WhatsApp</a></li>
+                    <li><a href="#" class="interactive-target">Dibuat segar setiap harinya</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-info-title">Hubungi Kami</h4>
+                <ul class="footer-links">
+                    <li><a href="https://instagram.com/minumsela" target="_blank" class="interactive-target">📱 Instagram: @minumsela</a></li>
+                    <li><a href="https://wa.me/6285887770921" target="_blank" class="interactive-target">💬 WhatsApp: +62 85887770921</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Sela. All rights reserved.</span>
+            <span>Di sela hari mu.</span>
+        </div>
+    </footer>
 
-<div class="cards">
-<div class="card">☕ Order by WhatsApp</div>
-<div class="card">📸 Instagram</div>
-<div class="card">🎵 TikTok</div>
-<div class="card">📍 Find Sela on GrabFood</div>
-<div class="card">🤝 Collaborate</div>
-<div class="card">💬 WhatsApp</div>
-</div>
-</section>
+    <!-- Sticky Navigation WhatsApp Button (Kanan Bawah) -->
+    <a href="https://wa.me/6285887770921" target="_blank" class="whatsapp-sticky-trigger interactive-target" title="Hubungi Kami via WhatsApp">
+        <svg viewBox="0 0 448 512">
+            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+        </svg>
+    </a>
 
-<footer>
-<h2>Di sela hari mu.</h2>
-<br>
-<p>Terima kasih telah menghadirkan Sela dalam cerita yang sedang berjalan.</p>
-</footer>
+    <!-- ==========================================================================
+         INTERACTIVE JAVASCRIPT ARCHITECTURE (Baunfire Mechanics)
+         ========================================================================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Custom Follower Crosshair Cursor Controller
+            const cursor = document.getElementById('custom-cursor');
+            const body = document.body;
+            
+            if (cursor) {
+                document.addEventListener('mousemove', (e) => {
+                    // Penempatan koordinat real-time x dan y mouse
+                    cursor.style.left = `${e.clientX}px`;
+                    cursor.style.top = `${e.clientY}px`;
+                });
 
-<script>
-document.querySelectorAll('.card').forEach(card=>{
-card.addEventListener('click',()=>{
-if(card.textContent.includes('☕')){
-alert('Connect this card to GoFood / GrabFood.');
-}
-});
-});
-</script>
+                // Deteksi Hover pada semua elemen interaktif (Button, Link, Logo, dll)
+                const interactiveElements = document.querySelectorAll('.interactive-target, .product-card, nav.nav-links a');
+                
+                interactiveElements.forEach(element => {
+                    element.addEventListener('mouseenter', () => {
+                        body.classList.add('cursor-expand');
+                    });
+                    element.addEventListener('mouseleave', () => {
+                        body.classList.remove('cursor-expand');
+                    });
+                });
+            }
 
+            // 2. High-Performance Intersection Observer untuk Smooth Scroll Reveal
+            const revealElements = document.querySelectorAll('.reveal-element');
+            
+            const revealOptions = {
+                threshold: 0.12, // Elemen terpicu jika 12% masuk ke dalam viewport layar
+                rootMargin: "0px 0px -40px 0px"
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Opsional: unobserve jika ingin animasi hanya berjalan sekali saja
+                        // observer.unobserve(entry.target);
+                    } else {
+                        // Membuat elemen fade-out kembali saat scroll ke atas (seperti Baunfire)
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, revealOptions);
+
+            revealElements.forEach(element => {
+                revealObserver.observe(element);
+            });
+
+            // 3. Mekanisme Interval Auto Transition Gambar Menu secara berkala
+            // Ini menjamin fungsionalitas transisi berjalan otomatis tanpa harus di-hover saja
+            const imageFrames = document.querySelectorAll('.product-image-frame');
+            
+            setInterval(() => {
+                imageFrames.forEach(frame => {
+                    const primaryImg = frame.querySelector('.img-primary');
+                    const secondaryImg = frame.querySelector('.img-secondary');
+                    
+                    if (primaryImg && secondaryImg) {
+                        // Cek status opacity saat ini untuk melakukan toggle swap secara berkala
+                        const isSecondaryVisible = window.getComputedStyle(secondaryImg).opacity === "1";
+                        
+                        if (!frame.matches(':hover')) { // Jalankan siklus otomatis hanya jika sedang tidak di-hover user
+                            if (isSecondaryVisible) {
+                                secondaryImg.style.opacity = "0";
+                            } else {
+                                secondaryImg.style.opacity = "1";
+                            }
+                        }
+                    }
+                });
+            }, 4000); // Berganti siklus secara elegan setiap 4 detik
+        });
+    </script>
 </body>
 </html>
