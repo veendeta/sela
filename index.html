@@ -889,7 +889,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>&copy; id="year" Sela. All rights reserved.</span>
+            <span>&copy; <span id="current-year"> Sela. All rights reserved.</span>
             <span>Di sela hari mu.</span>
         </div>
     </footer>
@@ -980,6 +980,7 @@
                 });
             }, 4000); // Berganti siklus secara elegan setiap 4 detik
         });
+        document.getElementById("current-year").textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
